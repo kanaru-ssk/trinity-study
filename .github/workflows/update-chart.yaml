@@ -55,4 +55,4 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_URL: ${{ steps.cpr.outputs.pull-request-url }}
         run: |
-          gh pr merge "$PR_URL" --merge
+          gh pr merge "$PR_URL" --auto --merge
