@@ -3,6 +3,7 @@ name: Deploy
 on:
   push:
     branches: ["main"]
+  workflow_call:
   workflow_dispatch: # actionの手動実行を可能にする
 
 # Sets the GITHUB_TOKEN permissions to allow deployment to GitHub Pages
