@@ -25,3 +25,5 @@ jobs:
         run: npm run lint
       - name: Build
         run: npm run build
+        env:
+          EXCHANGE_RATE_API_KEY: ${{ secrets.EXCHANGE_RATE_API_KEY }}
