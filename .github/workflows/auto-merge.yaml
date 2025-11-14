@@ -11,7 +11,7 @@ permissions:
   contents: write
 
 jobs:
-  merge:
+  auto-merge:
     runs-on: ubuntu-latest
     if: ${{ github.actor == 'github-actions[bot]' }}
     steps:

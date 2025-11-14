@@ -10,7 +10,7 @@ permissions:
   pull-requests: write   # PR 作成に必要
 
 jobs:
-  update:
+  update-chart:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
