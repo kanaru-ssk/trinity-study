@@ -7,7 +7,7 @@
     "build": "next build",
     "lint": "biome check",
     "format": "biome format --write",
-    "update": "tsx --env-file=.env --env-file=.env.local -r tsconfig-paths/register src/scripts/update-chart.ts"
+    "update": "tsx --env-file=.env -r tsconfig-paths/register src/scripts/update-chart.ts"
   },
   "dependencies": {
     "@t3-oss/env-nextjs": "^0.13.8",

@@ -38,6 +38,10 @@ import type { Chart } from "@/types/chart";
     // 429: Too Many Requestsを回避するために1秒おきにリクエスト
     await new Promise((resolve) => setTimeout(() => resolve(null), 1000));
   }
+  if (newChartWithJpy.length === 0) {
+    console.log("there is no new chart data with jpy");
+    return;
+  }
 
   const rows = newChartWithJpy
     .map(
