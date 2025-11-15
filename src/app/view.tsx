@@ -1,10 +1,10 @@
 "use client";
 
 import { SimulationTable } from "@/components/simulation-talbe";
+import { formatDate } from "@/lib/date";
 import type { SimulationMeta } from "@/types/simulation";
 
 type ViewProps = {
-  title: string;
   withdrawalRates: number[];
   simulationMeta: SimulationMeta[];
   simulationResults: number[][];
@@ -13,7 +13,6 @@ type ViewProps = {
 };
 
 export function View({
-  title,
   withdrawalRates,
   simulationMeta,
   simulationResults,
@@ -22,9 +21,10 @@ export function View({
 }: ViewProps) {
   return (
     <main className="prose prose-neutral mx-auto max-w-4xl px-5 py-20">
-      <h1 className="text-2xl">{title}</h1>
+      <h1 className="text-3xl">
+        【{formatDate(new Date(), "YYYY年M月")}最新】日本版トリニティスタディ
+      </h1>
       <SimulationSection
-        title={title}
         withdrawalRates={withdrawalRates}
         simulationMeta={simulationMeta}
         simulationResults={simulationResults}
@@ -40,7 +40,6 @@ export function View({
 }
 
 type SimulationSectionProps = {
-  title: string;
   withdrawalRates: number[];
   simulationMeta: SimulationMeta[];
   simulationResults: number[][];

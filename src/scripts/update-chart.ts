@@ -29,7 +29,6 @@ import type { Chart } from "@/types/chart";
     if (!jpyPerUsd) continue;
 
     newChartWithJpy.push({
-      id: crypto.randomUUID(),
       date: data.date,
       priceUsd: data.priceUsd,
       priceJpy: data.priceUsd * jpyPerUsd,
@@ -46,7 +45,7 @@ import type { Chart } from "@/types/chart";
   const rows = newChartWithJpy
     .map(
       (data) =>
-        `${data.id},${data.date},${data.priceUsd},${data.priceJpy},${data.jpyPerUsd}`,
+        `${data.date},${data.priceUsd},${data.priceJpy},${data.jpyPerUsd}`,
     )
     .join("\n");
   fs.appendFile(filePath, `\n${rows}`, "utf8");
