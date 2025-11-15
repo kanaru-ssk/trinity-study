@@ -66,8 +66,9 @@ function SimulationSection({
         simulationMeta={simulationMeta}
         simulationResults={simulationResults}
       />
-      <p>
-        {firstDataDate} ~ {lastDataDate}
+      <p className="text-sm">
+        ※ 縦軸: 取り崩し期間(n=試行回数)、横軸: 初年度の資産額に対する取り崩し率
+        <br />※ {firstDataDate} ~ {lastDataDate}
         のデータを使用してシミュレーションしています。
       </p>
     </section>

@@ -32,7 +32,8 @@ export function SimulationTable({
               <tr key={i}>
                 <th className="sticky left-0 w-20 bg-white px-4 py-1 text-center">
                   {meta.payoutPeriod} Year
-                  <br />({meta.numOfSimulation})
+                  <br />
+                  (n={meta.numOfSimulation})
                 </th>
                 {resultsRow.map((result, j) => (
                   <td
