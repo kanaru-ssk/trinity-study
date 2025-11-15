@@ -5,7 +5,7 @@ import { formatDate } from "@/lib/date";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: `【${formatDate(new Date(), "YYYY年M月")}最新】日本版トリニティスタディ`,
+    title: `日本版トリニティスタディ | ${formatDate(new Date(), "YYYY年M月")}最新`,
     description:
       "eMAXIS Slim 全世界株式（オール・カントリー）が連動する、MSCI ACWIを日本円建てで取崩しシミュレーション。4%ルールが日本でも再現性のある投資方法なのか検証しました。",
     openGraph: {

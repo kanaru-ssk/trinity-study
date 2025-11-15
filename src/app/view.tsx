@@ -21,8 +21,12 @@ export function View({
 }: ViewProps) {
   return (
     <main className="prose prose-neutral mx-auto max-w-4xl px-5 py-20">
-      <h1 className="text-3xl">
-        【{formatDate(new Date(), "YYYY年M月")}最新】日本版トリニティスタディ
+      <h1>
+        <span className="text-2xl">
+          {formatDate(new Date(), "YYYY年M月")}最新
+        </span>
+        <br />
+        <span className="text-3xl">日本版トリニティスタディ</span>
       </h1>
       <SimulationSection
         withdrawalRates={withdrawalRates}
