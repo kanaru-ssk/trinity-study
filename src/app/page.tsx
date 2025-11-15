@@ -31,6 +31,7 @@ export default async function Home() {
 
   return (
     <View
+      chart={chart}
       withdrawalRates={withdrawalRates}
       simulationMeta={simulationMeta}
       simulationResults={simulationResults}

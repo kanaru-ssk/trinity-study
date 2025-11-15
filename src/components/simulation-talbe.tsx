@@ -13,7 +13,7 @@ export function SimulationTable({
   simulationResults,
 }: SimulationTableProps) {
   return (
-    <div className="overflow-x-auto border border-neutral-300">
+    <div className="overflow-x-auto">
       <table className="mt-0 mb-0 w-full border-collapse whitespace-nowrap text-xs">
         <thead>
           <tr>

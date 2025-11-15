@@ -1,10 +1,21 @@
 "use client";
 
+import { TrendingUp } from "lucide-react";
+import { ChartAreaLinear } from "@/components/acwi-chart";
 import { SimulationTable } from "@/components/simulation-talbe";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { formatDate } from "@/lib/date";
+import type { Chart } from "@/types/chart";
 import type { SimulationMeta } from "@/types/simulation";
 
 type ViewProps = {
+  chart: Chart;
   withdrawalRates: number[];
   simulationMeta: SimulationMeta[];
   simulationResults: number[][];
@@ -13,6 +24,7 @@ type ViewProps = {
 };
 
 export function View({
+  chart,
   withdrawalRates,
   simulationMeta,
   simulationResults,
@@ -20,7 +32,7 @@ export function View({
   lastDataDate,
 }: ViewProps) {
   return (
-    <main className="prose prose-neutral mx-auto max-w-4xl px-5 py-20">
+    <main className="prose prose-neutral mx-auto max-w-4xl space-y-16 px-4 py-20">
       <h1>
         <span className="text-2xl">
           {formatDate(new Date(), "YYYY年M月")}最新
@@ -29,9 +41,15 @@ export function View({
         <span className="text-3xl">日本版トリニティスタディ</span>
       </h1>
       <SimulationSection
+        chart={chart}
         withdrawalRates={withdrawalRates}
         simulationMeta={simulationMeta}
         simulationResults={simulationResults}
+        firstDataDate={firstDataDate}
+        lastDataDate={lastDataDate}
+      />
+      <ChartSection
+        chart={chart}
         firstDataDate={firstDataDate}
         lastDataDate={lastDataDate}
       />
@@ -44,6 +62,7 @@ export function View({
 }
 
 type SimulationSectionProps = {
+  chart: Chart;
   withdrawalRates: number[];
   simulationMeta: SimulationMeta[];
   simulationResults: number[][];
@@ -60,17 +79,72 @@ function SimulationSection({
 }: SimulationSectionProps) {
   return (
     <section>
-      <h2>シミュレーション結果</h2>
-      <SimulationTable
-        withdrawalRates={withdrawalRates}
-        simulationMeta={simulationMeta}
-        simulationResults={simulationResults}
-      />
-      <p className="text-sm">
-        ※ 縦軸: 取り崩し期間(n=試行回数)、横軸: 初年度の資産額に対する取り崩し率
-        <br />※ {firstDataDate} ~ {lastDataDate}
-        のデータを使用してシミュレーションしています。
-      </p>
+      <Card>
+        <CardHeader>
+          <CardTitle>シミュレーション結果</CardTitle>
+          <CardDescription>
+            ※ 縦軸: 取り崩し期間(n=試行回数)、横軸:
+            初年度の資産額に対する取り崩し率
+            <br />※ {firstDataDate} ~ {lastDataDate}
+            のデータを使用してシミュレーションしています。
+            <br />※ 実際のアルゴリズムは
+            <a
+              href="https://github.com/kanaru-ssk/trinity-study/blob/main/src/lib/make-simulation.ts"
+              target="_blank"
+              rel="noreferrer"
+            >
+              GitHub
+            </a>
+            をご確認ください。
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <SimulationTable
+            withdrawalRates={withdrawalRates}
+            simulationMeta={simulationMeta}
+            simulationResults={simulationResults}
+          />
+        </CardContent>
+      </Card>
+    </section>
+  );
+}
+
+type ChartSectionProps = {
+  chart: Chart;
+  firstDataDate: string;
+  lastDataDate: string;
+};
+
+function ChartSection({
+  chart,
+  firstDataDate,
+  lastDataDate,
+}: ChartSectionProps) {
+  return (
+    <section>
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex gap-2">
+            MSCI ACWIの全期間チャート <TrendingUp className="h-4 w-4" />
+          </CardTitle>
+          <CardDescription>
+            ※ {firstDataDate} ~ {lastDataDate}
+            <br />※ データは
+            <a
+              href="https://www-cdn.msci.com/web/msci/index-tools/end-of-day-index-data-search"
+              target="_blank"
+              rel="noreferrer"
+            >
+              MSCIの公式ページ
+            </a>
+            から取得しています。
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ChartAreaLinear chart={chart} />
+        </CardContent>
+      </Card>
     </section>
   );
 }
