@@ -47,10 +47,7 @@ export function ChartAreaLinear({ chart }: ChartAreaLinearProps) {
       <ComposedChart
         accessibilityLayer
         data={chart}
-        margin={{
-          left: 12,
-          right: 12,
-        }}
+        margin={{ left: -24, right: -24 }}
       >
         <CartesianGrid vertical={false} />
         <XAxis
