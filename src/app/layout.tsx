@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { generateTitle } from "@/lib/generate-title";
 import "./globals.css";
 import { env } from "@/env";
+import { formatDate } from "@/lib/date";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: generateTitle(),
+    title: `日本版トリニティスタディ | ${formatDate(new Date(), "YYYY年M月")}最新`,
     description:
       "eMAXIS Slim 全世界株式（オール・カントリー）が連動する、MSCI ACWIを日本円建てで取崩しシミュレーション。4%ルールが日本でも再現性のある投資方法なのか検証しました。",
     openGraph: {

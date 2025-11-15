@@ -4,7 +4,7 @@ import type { ChartData } from "@/types/chart";
 // MSCI API から最新のACWIチャートデータをフェッチ
 export const fetchAcwiChart = async (
   lastDataDate: Date,
-): Promise<Omit<ChartData, "id" | "priceJpy" | "jpyPerUsd">[] | null> => {
+): Promise<Omit<ChartData, "priceJpy" | "jpyPerUsd">[] | null> => {
   const cloneLastDataDate = new Date(lastDataDate);
   cloneLastDataDate.setDate(cloneLastDataDate.getDate() + 1);
   const lastDataDateStr = toNoBreakStr(cloneLastDataDate);
@@ -34,7 +34,7 @@ export const fetchAcwiChart = async (
   }
 
   return parsed.data.indexes.INDEX_LEVELS.map((level) => {
-    const date = toISOString(String(level.calc_date));
+    const date = format(level.calc_date);
     return {
       date,
       priceUsd: level.level_eod,
@@ -62,15 +62,16 @@ const toNoBreakStr = (date: Date) => {
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
 
-  return year + month + day;
+  return `${year}${month}${day}`;
 };
 
-// "20231105" -> "2023-11-05T00:00:00.000Z"
-const toISOString = (noBreakStr: string): string => {
-  const yearStr = noBreakStr.slice(0, 4);
-  const monthStr = noBreakStr.slice(4, 6);
-  const dayStr = noBreakStr.slice(6);
-  return `${yearStr}-${monthStr}-${dayStr}T00:00:00.000Z`;
+// 20231105 -> "2023-11-05"
+const format = (dateNumber: number) => {
+  const noBreakStr = String(dateNumber);
+  const year = noBreakStr.slice(0, 4);
+  const month = noBreakStr.slice(4, 6);
+  const day = noBreakStr.slice(6);
+  return `${year}-${month}-${day}`;
 };
 
 // 土日の時は次の月曜日を返す

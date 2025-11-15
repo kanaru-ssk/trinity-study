@@ -1,6 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { generateTitle } from "@/lib/generate-title";
+import { formatDate } from "@/lib/date";
 import { makeSimulation } from "@/lib/make-simulation";
 import { parseCsvToCart } from "@/lib/parse-csv-to-cart";
 import { View } from "./view";
@@ -23,15 +23,15 @@ export default async function Home() {
     withdrawalRates,
   );
 
-  const title = generateTitle();
-  const firstDataDate = new Date(chart[0].date).toLocaleDateString("ja-JP");
-  const lastDataDate = new Date(
-    chart[chart.length - 1].date,
-  ).toLocaleDateString("ja-JP");
+  const firstDataDate = formatDate(new Date(chart[0].date), "YYYY/MM/DD");
+  const lastDataDate = formatDate(
+    new Date(chart[chart.length - 1].date),
+    "YYYY/MM/DD",
+  );
 
   return (
     <View
-      title={title}
+      chart={chart}
       withdrawalRates={withdrawalRates}
       simulationMeta={simulationMeta}
       simulationResults={simulationResults}
