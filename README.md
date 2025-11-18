@@ -7,6 +7,12 @@ MSCI ACWI を日本円建てで取崩しシミュレーションした日本版�
 
 [シミュレーション結果はこちら](https://trinity-study.kanaru.jp)
 
+## 環境変数
+
+- `NEXT_PUBLIC_BASE_URL`: OGP やリンク生成に使用するサイトのベース URL。
+- `NEXT_PUBLIC_GTM_ID`: Google Tag Manager のコンテナ ID（例: `GTM-XXXXXXX`）。
+- `EXCHANGE_RATE_API_KEY`: exchangerates API の認証キー。
+
 ## トリニティスタディとは？
 
 1998 年、[THE AAII JOURNAL](https://www.aaii.com/journal) に掲載された以下の論文の通称。

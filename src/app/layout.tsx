@@ -1,3 +1,4 @@
+import { GoogleTagManager } from "@next/third-parties/google";
 import type { Metadata } from "next";
 import "./globals.css";
 import { env } from "@/env";
@@ -23,6 +24,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
+      <head>
+        <GoogleTagManager gtmId={env.NEXT_PUBLIC_GTM_ID} />
+      </head>
+
       <body>
         {children}
         <footer className="p-8 text-center text-neutral-500 text-xs">
