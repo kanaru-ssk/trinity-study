@@ -2,7 +2,7 @@ import { GoogleTagManager } from "@next/third-parties/google";
 import type { Metadata } from "next";
 import "./globals.css";
 import { env } from "@/env";
-import { formatDate } from "@/lib/date";
+import { addMonths, formatDate } from "@/lib/date";
 import { loadChart } from "@/lib/load-chart";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -18,14 +18,14 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-const FALLBACK_LABEL = formatDate(new Date(), "YYYY年M月");
+const FALLBACK_LABEL = formatDate(addMonths(new Date(), 1), "YYYY年M月");
 
 async function getLatestDataLabel() {
   try {
     const chart = await loadChart();
     const lastDate = chart.at(-1)?.date;
     if (!lastDate) return FALLBACK_LABEL;
-    return formatDate(new Date(lastDate), "YYYY年M月");
+    return formatDate(addMonths(new Date(lastDate), 1), "YYYY年M月");
   } catch (error) {
     console.error("failed to load chart for metadata", error);
     return FALLBACK_LABEL;

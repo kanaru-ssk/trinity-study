@@ -10,7 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { formatDate } from "@/lib/date";
+import { addMonths, formatDate } from "@/lib/date";
 import type { Chart } from "@/types/chart";
 import type { SimulationMeta } from "@/types/simulation";
 
@@ -31,17 +31,19 @@ export function View({
   firstDataDate,
   lastDataDate,
 }: ViewProps) {
-  const latestDataLabel = formatDate(new Date(lastDataDate), "YYYY年M月");
+  const dataLastMonth = formatDate(new Date(lastDataDate), "YYYY年M月");
+  const lastUpdatedDate = formatDate(
+    addMonths(new Date(lastDataDate), 1),
+    "YYYY年M月",
+  );
   return (
     <main className="prose prose-neutral mx-auto max-w-4xl space-y-16 px-4 py-20">
       <h1>
-        <span className="text-2xl">{latestDataLabel}最新</span>
+        <span className="text-2xl">{lastUpdatedDate}最新</span>
         <br />
         <span className="text-3xl">日本版トリニティスタディ</span>
       </h1>
-      <p className="text-neutral-500 text-sm">
-        データ最終月: {latestDataLabel}
-      </p>
+      <p className="text-neutral-500 text-sm">データ最終月: {dataLastMonth}</p>
       <SimulationSection
         chart={chart}
         withdrawalRates={withdrawalRates}

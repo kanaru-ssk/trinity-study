@@ -18,3 +18,9 @@ export function formatDate(date: Date, template: Template = "YYYY-MM-DD") {
   // YYYY-MM-DD
   return `${yyyy}-${mm}-${dd}`;
 }
+
+export function addMonths(date: Date, months: number) {
+  const next = new Date(date);
+  next.setMonth(next.getMonth() + months);
+  return next;
+}
