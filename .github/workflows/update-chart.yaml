@@ -14,12 +14,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           persist-credentials: true   # push するために必要
           fetch-depth: 0              # push するために必要
       - name: Use Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 24
       - name: Cache npm directory
@@ -57,4 +57,4 @@ jobs:
         run: |
           gh pr merge "$PR_URL" --auto --merge
       - name: Deploy
-        uses: ./.github/workflows/deploy.yml
+        uses: ./.github/workflows/deploy.yaml
