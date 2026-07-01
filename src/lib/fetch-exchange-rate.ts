@@ -1,10 +1,11 @@
 import { z } from "zod";
-import { env } from "@/env";
+import { env } from "../env.ts";
 
 // Exchange Rate API から指定日のドル円レートをフェッチ
 export const fetchExchangeRate = async (
   date: string,
 ): Promise<number | null> => {
+  // 無料プランはHTTPSに非対応のためHTTPを使用
   const endpoint = "http://api.exchangeratesapi.io/v1";
   const accessKey = `access_key=${env.EXCHANGE_RATE_API_KEY}`;
   const symbols = "symbols=JPY,USD";

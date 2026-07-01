@@ -1,5 +1,5 @@
 import z from "zod";
-import type { ChartData } from "@/types/chart";
+import type { ChartData } from "../types/chart.ts";
 
 // MSCI API から最新のACWIチャートデータをフェッチ
 export const fetchAcwiChart = async (
@@ -76,7 +76,7 @@ const format = (dateNumber: number) => {
 
 // 土日の時は次の月曜日を返す
 const getNextWeekDay = (date: Date) => {
-  const nextWeekDay = date;
+  const nextWeekDay = new Date(date);
   const day = date.getDay();
 
   if (day === 0) nextWeekDay.setDate(date.getDate() + 1);

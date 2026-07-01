@@ -1,9 +1,9 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { fetchAcwiChart } from "@/lib/fetch-acwi-chart";
-import { fetchExchangeRate } from "@/lib/fetch-exchange-rate";
-import { parseCsvToCart } from "@/lib/parse-csv-to-cart";
-import type { Chart } from "@/types/chart";
+import { fetchAcwiChart } from "../lib/fetch-acwi-chart.ts";
+import { fetchExchangeRate } from "../lib/fetch-exchange-rate.ts";
+import { parseCsvToCart } from "../lib/parse-csv-to-cart.ts";
+import type { Chart } from "../types/chart.ts";
 
 (async () => {
   // CSVからチャートデータ取得
@@ -48,5 +48,5 @@ import type { Chart } from "@/types/chart";
         `${data.date},${data.priceUsd},${data.priceJpy},${data.jpyPerUsd}`,
     )
     .join("\n");
-  fs.appendFile(filePath, `\n${rows}`, "utf8");
+  await fs.appendFile(filePath, `\n${rows}`, "utf8");
 })();
