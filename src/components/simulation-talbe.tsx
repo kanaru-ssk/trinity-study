@@ -17,7 +17,7 @@ export function SimulationTable({
       <table className="mt-0 mb-0 w-full border-collapse whitespace-nowrap text-xs">
         <thead>
           <tr>
-            <th className="sticky left-0 bg-white" />
+            <th className="sticky left-0 bg-card" />
             {withdrawalRates.map((rate) => (
               <th key={rate} className="p-4 text-center">
                 {rate}%
@@ -30,7 +30,7 @@ export function SimulationTable({
             const meta = simulationMeta[i];
             return (
               <tr key={i}>
-                <th className="sticky left-0 w-20 bg-white px-4 py-1 text-center">
+                <th className="sticky left-0 w-20 bg-card px-4 py-1 text-center">
                   {meta.payoutPeriod} Year
                   <br />
                   (n={meta.numOfSimulation})

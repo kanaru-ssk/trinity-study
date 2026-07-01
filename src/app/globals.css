@@ -1,14 +1,17 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
 @plugin "@tailwindcss/typography";
 
 @theme inline {
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
+  --font-sans:
+    var(--font-inter), -apple-system, system-ui, "Segoe UI", Helvetica, Arial,
+    sans-serif;
+  --radius-xs: 4px;
+  --radius-sm: 5px;
+  --radius-md: 8px;
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+  --radius-xl: 16px;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -27,6 +30,9 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-ink-secondary: var(--ink-secondary);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-faint: var(--ink-faint);
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
@@ -43,28 +49,34 @@
 }
 
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  /* Notion-style design tokens (.claude/DESIGN.md) */
+  --radius: 12px;
+  --background: #f6f5f4; /* colors.canvas-soft */
+  --foreground: #171717; /* colors.ink */
+  --card: #ffffff; /* colors.surface */
+  --card-foreground: #171717;
+  --popover: #ffffff;
+  --popover-foreground: #171717;
+  --primary: #0075de; /* colors.primary */
+  --primary-foreground: #ffffff; /* colors.on-primary */
+  --primary-active: #005bab; /* colors.primary-active */
+  --secondary: #f6f5f4;
+  --secondary-foreground: #171717;
+  --muted: #f6f5f4;
+  --muted-foreground: #615d59; /* colors.ink-muted */
+  --accent: #f6f5f4;
+  --accent-foreground: #171717;
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
+  --border: #e6e6e6; /* colors.hairline */
+  --input: #dddddd;
+  --ring: #0075de;
+  --ink-secondary: #31302e;
+  --ink-muted: #615d59;
+  --ink-faint: #a39e98;
+  /* chart series colours drawn from the decorative sticker palette */
+  --chart-1: #62aef0; /* accent-sky: priceUsd (reference series) */
+  --chart-2: #2a9d99; /* accent-teal: priceJpy (primary series) */
+  --chart-3: #dd5b00; /* accent-orange: jpyPerUsd (rate line) */
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
   --sidebar: oklch(0.985 0 0);
@@ -75,40 +87,14 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
-}
-
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  /* Elevation & Depth: barely-there layered shadows, never a hard cast */
+  --shadow-soft-1:
+    0 0.175px 1.041px rgba(0, 0, 0, 0.01), 0 0.8px 2.925px rgba(0, 0, 0, 0.02),
+    0 2.025px 7.847px rgba(0, 0, 0, 0.027), 0 4px 18px rgba(0, 0, 0, 0.04);
+  --shadow-soft-2:
+    0 0.339px 2px rgba(0, 0, 0, 0.01),
+    0 1.114px 5.5px rgba(0, 0, 0, 0.02), 0 3.196px 12.8px rgba(0, 0, 0, 0.03),
+    0 9px 24px rgba(0, 0, 0, 0.04), 0 23px 52px rgba(0, 0, 0, 0.05);
 }
 
 @layer base {
@@ -118,4 +104,33 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Reskin the Tailwind Typography plugin to the Notion-style palette */
+.prose {
+  --tw-prose-body: var(--ink-secondary);
+  --tw-prose-headings: var(--foreground);
+  --tw-prose-lead: var(--ink-secondary);
+  --tw-prose-links: var(--primary);
+  --tw-prose-bold: var(--foreground);
+  --tw-prose-counters: var(--ink-muted);
+  --tw-prose-bullets: var(--ink-faint);
+  --tw-prose-hr: var(--border);
+  --tw-prose-quotes: var(--foreground);
+  --tw-prose-quote-borders: var(--border);
+  --tw-prose-captions: var(--ink-muted);
+  --tw-prose-code: var(--foreground);
+  --tw-prose-th-borders: var(--border);
+  --tw-prose-td-borders: var(--border);
+}
+.prose :where(p, li):not(:where([class~="not-prose"] *)) {
+  line-height: 1.5;
+}
+.prose :where(a):not(:where([class~="not-prose"] *)) {
+  font-weight: 400;
+  text-decoration-line: none;
+}
+.prose :where(a):not(:where([class~="not-prose"] *)):hover {
+  color: var(--primary-active);
+  text-decoration-line: underline;
 }

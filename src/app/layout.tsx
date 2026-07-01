@@ -1,8 +1,15 @@
 import { GoogleTagManager } from "@next/third-parties/google";
 import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { env } from "@/env";
 import { formatDate } from "@/lib/date";
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -23,21 +30,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ja">
+    <html lang="ja" className={`${inter.variable} font-sans`}>
       <head>
         <GoogleTagManager gtmId={env.NEXT_PUBLIC_GTM_ID} />
       </head>
 
       <body>
         {children}
-        <footer className="p-8 text-center text-neutral-500 text-xs">
+        <footer className="p-8 text-center text-ink-muted text-xs">
           <p>
             &copy;
             <a
               href="https://kanaru.jp"
               target="_blank"
               rel="noreferrer"
-              className="ml-1 underline"
+              className="ml-1 text-primary underline underline-offset-2 hover:text-primary-active"
             >
               Kanaru
             </a>
