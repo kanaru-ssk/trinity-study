@@ -58,8 +58,4 @@ jobs:
           gh pr merge "$PR_URL" --auto --merge
   deploy:
     needs: update-chart
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
     uses: ./.github/workflows/deploy.yaml
