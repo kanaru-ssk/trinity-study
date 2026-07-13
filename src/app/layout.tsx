@@ -21,6 +21,9 @@ export async function generateMetadata(): Promise<Metadata> {
       images: [`${env.NEXT_PUBLIC_BASE_URL}/ogp.png`],
       url: env.NEXT_PUBLIC_BASE_URL,
     },
+    other: {
+      "google-adsense-account": "ca-pub-9191403506411578",
+    },
   };
 }
 
