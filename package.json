@@ -15,7 +15,7 @@
     "@next/third-parties": "^16.2.10",
     "@t3-oss/env-nextjs": "^0.13.11",
     "clsx": "^2.1.1",
-    "lucide-react": "^1.24.0",
+    "lucide-react": "^1.26.0",
     "next": "^16.2.10",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
