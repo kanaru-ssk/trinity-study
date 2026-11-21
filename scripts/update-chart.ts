@@ -1,14 +1,15 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fetchAcwiChart } from "../src/lib/fetch-acwi-chart.ts";
-import { fetchExchangeRate } from "../src/lib/fetch-exchange-rate.ts";
+import {
+	fetchExchangeRate,
+	isPlausibleRate,
+} from "../src/lib/fetch-exchange-rate.ts";
 import { isStale } from "../src/lib/freshness.ts";
 import { parseCsvToCart } from "../src/lib/parse-csv-to-cart.ts";
 import { type Chart, chartSchema } from "../src/types/chart.ts";
 
 // 失敗時は例外で非 0 終了させ、ワークフローを失敗として検知できるようにする
-const apiKey = process.env.EXCHANGE_RATE_API_KEY;
-if (!apiKey) throw new Error("EXCHANGE_RATE_API_KEY is not set");
 
 // CSVからチャートデータ取得
 const filePath = path.join(process.cwd(), "src", "data", "chart.csv");
@@ -28,10 +29,16 @@ if (!newChart.ok) {
 
 const newChartWithJpy: Chart = [];
 for (const data of newChart.data) {
-	const jpyPerUsd = await fetchExchangeRate(data.date, apiKey);
+	const jpyPerUsd = await fetchExchangeRate(data.date);
 	// 1 か月でも欠けると「12 行 = 1 年」の前提が崩れるため、何も書き込まずに失敗させる
 	if (!jpyPerUsd.ok) {
 		throw new Error(jpyPerUsd.error);
+	}
+	const previousRate = (newChartWithJpy.at(-1) ?? chart.at(-1))?.jpyPerUsd;
+	if (previousRate && !isPlausibleRate(previousRate, jpyPerUsd.data)) {
+		throw new Error(
+			`implausible exchange rate on ${data.date}: ${previousRate} -> ${jpyPerUsd.data}`,
+		);
 	}
 
 	newChartWithJpy.push({
@@ -40,8 +47,6 @@ for (const data of newChart.data) {
 		priceJpy: data.priceUsd * jpyPerUsd.data,
 		jpyPerUsd: jpyPerUsd.data,
 	});
-	// 429: Too Many Requestsを回避するために1秒おきにリクエスト
-	await new Promise((resolve) => setTimeout(resolve, 1000));
 }
 
 if (newChartWithJpy.length === 0) {

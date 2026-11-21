@@ -53,11 +53,7 @@ MSCI ACWI を日本円建てで取崩すシミュレーションを掲載する�
 
 ACWI のチャートデータ : [End of day index data search](https://www.msci.com/end-of-day-data-search)
 
-ドル円為替データ : [exchangerates API](https://exchangeratesapi.io/)
-
-## 環境変数
-
-- `EXCHANGE_RATE_API_KEY`: exchangerates API の認証キー（`npm run update` でのみ使用）。ローカルでは `.env` に記載します。
+ドル円為替データ : [Frankfurter API](https://frankfurter.dev/)（欧州中央銀行の参照レート）
 
 ## デプロイ
 

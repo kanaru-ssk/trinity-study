@@ -2,39 +2,40 @@ import { z } from "zod";
 import type { Result } from "../types/result.ts";
 import { fetchJson } from "./fetch-json.ts";
 
-// Exchange Rate API から指定日のドル円レートをフェッチ
+// Frankfurter API（欧州中央銀行の参照レート）から指定日のドル円レートをフェッチ
+// HTTPS 対応・API キー不要。指定日が休業日の場合は直前の営業日のレートが返る
 export const fetchExchangeRate = async (
 	date: string,
-	apiKey: string,
 ): Promise<Result<number, string>> => {
-	// 無料プランはHTTPSに非対応のためHTTPを使用
-	const endpoint = "http://api.exchangeratesapi.io/v1";
-	const accessKey = `access_key=${apiKey}`;
-	const symbols = "symbols=JPY,USD";
+	const endpoint = "https://api.frankfurter.dev/v1";
 
-	const res = await fetchJson(`${endpoint}/${date}?${accessKey}&${symbols}`);
+	const res = await fetchJson(`${endpoint}/${date}?base=USD&symbols=JPY`);
 	if (!res.ok) {
-		return { ok: false, error: `exchangerates API (${date}): ${res.error}` };
+		return { ok: false, error: `Frankfurter API (${date}): ${res.error}` };
 	}
 
-	const parsed = exchangeRatesResponseSchema.safeParse(res.data);
+	const parsed = frankfurterResponseSchema.safeParse(res.data);
 	if (!parsed.success) {
 		return {
 			ok: false,
-			error: `exchangerates API (${date}): ${parsed.error.message}`,
+			error: `Frankfurter API (${date}): ${parsed.error.message}`,
 		};
 	}
 
-	return { ok: true, data: parsed.data.rates.JPY / parsed.data.rates.USD };
+	return { ok: true, data: parsed.data.rates.JPY };
 };
 
-const exchangeRatesResponseSchema = z.object({
-	success: z.literal(true),
-	timestamp: z.number(),
-	base: z.string(),
-	date: z.string(),
+const frankfurterResponseSchema = z.object({
+	base: z.literal("USD"),
+	date: z.iso.date(),
 	rates: z.object({
 		JPY: z.number().positive(),
-		USD: z.number().positive(),
 	}),
 });
+
+/** 前月比でこれ以上動いたレートは異常値として扱う */
+export const MAX_MONTHLY_RATE_CHANGE = 0.2;
+
+// 取得したレートが前月から極端に変動していないか確認する
+export const isPlausibleRate = (previous: number, next: number): boolean =>
+	Math.abs(next / previous - 1) <= MAX_MONTHLY_RATE_CHANGE;

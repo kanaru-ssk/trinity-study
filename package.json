@@ -9,7 +9,7 @@
 		"format": "biome check --write --unsafe",
 		"typecheck": "cf workers types && tsc",
 		"test": "vitest",
-		"update": "node --env-file-if-exists=.env scripts/update-chart.ts"
+		"update": "node scripts/update-chart.ts"
 	},
 	"dependencies": {
 		"clsx": "^2.1.1",

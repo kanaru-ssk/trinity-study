@@ -325,12 +325,21 @@ function DataSourceSection() {
 						<dt>ドル円為替データ</dt>
 						<dd>
 							<a
+								href="https://frankfurter.dev/"
+								target="_blank"
+								rel="noreferrer"
+							>
+								Frankfurter API
+							</a>
+							（2026年10月までのデータは
+							<a
 								href="https://exchangeratesapi.io/"
 								target="_blank"
 								rel="noreferrer"
 							>
 								exchangerates API
 							</a>
+							）
 						</dd>
 					</dl>
 				</CardContent>
