@@ -16,16 +16,40 @@ MSCI ACWI を日本円建てで取崩すシミュレーションを掲載する�
 
 ## 技術スタック
 
-- [Next.js v16](https://nextjs.org/)
-- [TypeScript v5](https://www.typescriptlang.org/)
-- [GitHub](https://github.com/) (Actions and Pages)
+- [Hono](https://hono.dev/)（SSG）
+- [Cloudflare Workers](https://workers.cloudflare.com/)
+- [Vite](https://vite.dev/) / [Tailwind CSS](https://tailwindcss.com/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [GitHub Actions](https://github.com/features/actions)
 
 ## 必要要件
 
-- Node.js v24.x（LTS）
-- npm v10 以上
+- Node.js v26.x
 
-## データ入手元
+## コマンド
+
+| コマンド            | 内容                       |
+| ------------------- | -------------------------- |
+| `npm run dev`       | 開発サーバーを起動         |
+| `npm run build`     | ビルドと SSG               |
+| `npm test`          | テスト                     |
+| `npm run lint`      | lint                       |
+| `npm run format`    | 整形                       |
+| `npm run typecheck` | 型チェック                 |
+| `npm run update`    | チャートデータを最新に更新 |
+
+## ルーティング
+
+`src/routes` 以下の `index.ts` / `index.tsx` がルートになります。HTTP メソッド名（`GET` など）でハンドラーを export し、`ssg = true` を export すると `npm run build` で静的 HTML に書き出します。
+
+| ファイル                      | パス           |
+| ----------------------------- | -------------- |
+| `routes/index.tsx`            | `/`            |
+| `routes/sitemap.xml/index.ts` | `/sitemap.xml` |
+
+## データ
+
+チャートデータは `src/data/chart.csv` に保存しています。GitHub Actions（`.github/workflows/update-chart.yaml`）が毎月 `npm run update` で最新データを追記し、デプロイします。
 
 ACWI のチャートデータ : [End of day index data search](https://www.msci.com/end-of-day-data-search)
 
@@ -33,6 +57,8 @@ ACWI のチャートデータ : [End of day index data search](https://www.msci.
 
 ## 環境変数
 
-- `NEXT_PUBLIC_BASE_URL`: OGP やリンク生成に使用するサイトのベース URL。
-- `NEXT_PUBLIC_GTM_ID`: Google Tag Manager のコンテナ ID（例: `GTM-XXXXXXX`）。
-- `EXCHANGE_RATE_API_KEY`: exchangerates API の認証キー。
+- `EXCHANGE_RATE_API_KEY`: exchangerates API の認証キー（`npm run update` でのみ使用）。ローカルでは `.env` に記載します。
+
+## デプロイ
+
+`main` への push で `.github/workflows/deploy.yaml` が Cloudflare Workers にデプロイします。リポジトリの Secrets に `CLOUDFLARE_API_TOKEN` と `CLOUDFLARE_ACCOUNT_ID` を設定してください。
