@@ -1,0 +1,50 @@
+name: Rebuild Chart
+
+# src/data/chart.csv の priceUsd を、指定した種類の指数で全期間取り直して PR を作る。
+# シミュレーション結果が大きく変わるため、PR の差分とプレビューを確認してから手動でマージする
+on:
+  workflow_dispatch:
+    inputs:
+      index_variant:
+        description: "MSCI の指数の種類（STRD: 配当なし / NETR: 配当込み Net / GRTR: 配当込み Gross）"
+        type: choice
+        options: [NETR, GRTR, STRD]
+        default: NETR
+
+permissions:
+  contents: read
+
+jobs:
+  rebuild-chart:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # ブランチの push に必要
+      pull-requests: write # PR 作成に必要
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 26
+          cache: npm
+      - run: npm ci
+      - run: node scripts/rebuild-chart.ts "$INDEX_VARIANT"
+        env:
+          INDEX_VARIANT: ${{ inputs.index_variant }}
+      # GITHUB_TOKEN で作った PR では test.yaml が起動しないため、ここでテストする
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+      - uses: peter-evans/create-pull-request@3ffccacd46053766916f087ce41d627c0b8cf2d1 # v8.1.3
+        with:
+          commit-message: "チャートデータを ${{ inputs.index_variant }} で取り直す"
+          title: "チャートデータを ${{ inputs.index_variant }} で取り直す"
+          body: |
+            "Rebuild Chart" ワークフローで、`src/data/chart.csv` の priceUsd を MSCI ACWI（${{ inputs.index_variant }}）で全期間取り直しました。
+            為替レートは既存の値を使っています。
+
+            シミュレーション結果が大きく変わるため、内容を確認してからマージしてください。
+          branch: chore/rebuild-chart-${{ inputs.index_variant }}
+          add-paths: |
+            src/data/chart.csv
+            src/data/index.json

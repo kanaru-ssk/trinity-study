@@ -10,7 +10,9 @@ import {
 	CardTitle,
 } from "../components/ui/card";
 import csv from "../data/chart.csv?raw";
+import indexJson from "../data/index.json";
 import { formatDate } from "../lib/date";
+import { indexMetaSchema, indexVariantLabels } from "../lib/index-variant";
 import { makeSimulation } from "../lib/make-simulation";
 import { parseCsvToCart } from "../lib/parse-csv-to-cart";
 import type { Chart } from "../types/chart";
@@ -27,6 +29,8 @@ const GET: Handler = (c) => {
 		throw new Error(parsed.error);
 	}
 	const chart = parsed.data;
+	const { indexVariant } = indexMetaSchema.parse(indexJson);
+	const indexLabel = indexVariantLabels[indexVariant];
 
 	// 取り崩しシミュレーション実行
 	const { simulationMeta, simulationResults } = makeSimulation(
@@ -57,6 +61,7 @@ const GET: Handler = (c) => {
 				simulationResults={simulationResults}
 				firstDataDate={firstDataDate}
 				lastDataDate={lastDataDate}
+				indexLabel={indexLabel}
 			/>
 			<ChartSection
 				chart={chart}
@@ -84,6 +89,7 @@ type SimulationSectionProps = {
 	simulationResults: number[][];
 	firstDataDate: string;
 	lastDataDate: string;
+	indexLabel: string;
 };
 
 function SimulationSection({
@@ -92,6 +98,7 @@ function SimulationSection({
 	simulationResults,
 	firstDataDate,
 	lastDataDate,
+	indexLabel,
 }: SimulationSectionProps) {
 	return (
 		<section>
@@ -103,6 +110,8 @@ function SimulationSection({
 						初年度の資産額に対する取り崩し率
 						<br />※ {firstDataDate} ~ {lastDataDate}
 						のデータを使用してシミュレーションしています。
+						<br />※ 指数は MSCI ACWI {indexLabel}
+						を円換算したものです。信託報酬・税金は考慮していません。
 						<br />※ 実際のアルゴリズムは
 						<a
 							href="https://github.com/kanaru-ssk/trinity-study/blob/main/src/lib/make-simulation.ts"
