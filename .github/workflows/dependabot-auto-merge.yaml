@@ -15,8 +15,21 @@ jobs:
     steps:
       - id: metadata
         uses: dependabot/fetch-metadata@25dd0e34f4fe68f24cc83900b1fe3fe149efef98 # v3.1.0
-      # major は手動でレビューする
-      - if: steps.metadata.outputs.update-type != 'version-update:semver-major'
+      # 自動マージするのは以下のみ。それ以外（major、本番依存の minor、プレリリース）は手動でレビューする
+      # - patch
+      # - devDependencies の minor
+      # main の必須チェック（Test / test）が通るまでマージされないよう、ブランチ保護を前提にしている
+      - if: >-
+          ${{
+            !contains(steps.metadata.outputs.new-version, '-') &&
+            (
+              steps.metadata.outputs.update-type == 'version-update:semver-patch' ||
+              (
+                steps.metadata.outputs.update-type == 'version-update:semver-minor' &&
+                steps.metadata.outputs.dependency-type == 'direct:development'
+              )
+            )
+          }}
         run: gh pr merge --auto --squash "$PR_URL"
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
