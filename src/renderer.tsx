@@ -6,6 +6,8 @@ export type Meta = {
 	title: string;
 	description: string;
 	noindex?: boolean;
+	/** ページのパス。canonical と og:url に使う（404 などの noindex ページでは省略する） */
+	path?: string;
 };
 
 type Render = (content: string | Promise<string>, meta: Meta) => Response;
@@ -17,7 +19,8 @@ declare module "hono" {
 const gtmScript = `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${GTM_ID}');`;
 
 export const renderer = jsxRenderer(
-	({ children, title, description, noindex }) => {
+	({ children, title, description, noindex, path }) => {
+		const url = path === undefined ? undefined : new URL(path, BASE_URL).href;
 		return (
 			<html lang="ja" class="font-sans">
 				<head>
@@ -28,7 +31,8 @@ export const renderer = jsxRenderer(
 					<meta property="og:type" content="website" />
 					<meta property="og:title" content={title} />
 					<meta property="og:description" content={description} />
-					<meta property="og:url" content={BASE_URL} />
+					{url && <link rel="canonical" href={url} />}
+					{url && <meta property="og:url" content={url} />}
 					<meta property="og:image" content={`${BASE_URL}/ogp.png`} />
 					<meta name="google-adsense-account" content={ADSENSE_ACCOUNT} />
 					{noindex && <meta name="robots" content="noindex, nofollow" />}
