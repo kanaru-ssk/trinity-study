@@ -70,7 +70,7 @@ const GET: Handler = (c) => {
 			/>
 			<AboutSection />
 			<TrinityStudySection />
-			<AlgorithmSection />
+			<AlgorithmSection chart={chart} simulationMeta={simulationMeta} />
 			<DataSourceSection />
 		</main>,
 		{
@@ -157,7 +157,7 @@ function ChartSection({
 						※ {firstDataDate} ~ {lastDataDate}
 						<br />※ データは
 						<a
-							href="https://www-cdn.msci.com/web/msci/index-tools/end-of-day-index-data-search"
+							href="https://www.msci.com/end-of-day-data-search"
 							target="_blank"
 							rel="noreferrer"
 						>
@@ -246,10 +246,10 @@ function TrinityStudySection() {
 						</a>
 					</p>
 					<p>
-						現役時に貯めた資産を取り崩して生活する退職者を想定し、株式および債権で運用された資産の安全な取崩し率を調べた論文です。
+						現役時に貯めた資産を取り崩して生活する退職者を想定し、株式および債券で運用された資産の安全な取崩し率を調べた論文です。
 					</p>
 					<p>
-						この論文では株式にS&P500(アメリカの株式インデックス)、債権にアメリカの長期高格付け社債を使用してシミュレーションしています。
+						この論文では株式にS&P500(アメリカの株式インデックス)、債券にアメリカの長期高格付け社債を使用してシミュレーションしています。
 					</p>
 					<p>
 						本サイトでは、日本人向けとしてACWI(全世界株式インデックス)を日本円建てで取崩すシミュレーションをしました。
@@ -260,7 +260,12 @@ function TrinityStudySection() {
 	);
 }
 
-function AlgorithmSection() {
+type AlgorithmSectionProps = {
+	chart: Chart;
+	simulationMeta: SimulationMeta[];
+};
+
+function AlgorithmSection({ chart, simulationMeta }: AlgorithmSectionProps) {
 	return (
 		<section>
 			<Card>
@@ -275,7 +280,15 @@ function AlgorithmSection() {
 						>
 							GitHub
 						</a>
-						で公開しています。ソースコード内のmakeSimulationData.tsで実際に動いているシミュレーションアルゴリズムをご確認頂けます。
+						で公開しています。ソースコード内の
+						<a
+							href="https://github.com/kanaru-ssk/trinity-study/blob/main/src/lib/make-simulation.ts"
+							target="_blank"
+							rel="noreferrer"
+						>
+							make-simulation.ts
+						</a>
+						で実際に動いているシミュレーションアルゴリズムをご確認頂けます。
 					</p>
 					<p>上記ファイルの関数で以下の手順でシミュレーションしています。</p>
 					<ol>
@@ -284,33 +297,64 @@ function AlgorithmSection() {
 						</li>
 						<li>初年度はそのまま取り崩し(100 – 5で資産残高95)</li>
 						<li>
-							2年目以降は資産残高に騰落率をかけて時価を計算し、そこから取り崩す。（10%値上がりした場合、95*1.1–5=99.5）
+							2年目以降は資産残高に1年間の騰落率をかけて時価を計算し、そこから取り崩す。（10%値上がりした場合、95*1.1–5=99.5）
 						</li>
 						<li>
-							3を取り崩し年数分繰り返し、資産残高が0にならなければ成功とする。
+							3を取り崩し年数分繰り返し、資産残高が一度も0未満（マイナス）にならなければ成功とする。
 						</li>
 					</ol>
-					<h3 class={sectionHeading3}>試行回数について</h3>
-					<p>上の操作をデータ数が許す限り繰り返す。</p>
 					<p>
-						例えば、1987年12月から2023年11月のデータを取得出来ている場合、15年の取り崩し年数でシミュレーションする回数は以下のようになる。
+						取り崩しは毎年の初めに行うため、取り崩し年数が15年の場合、取り崩しは15回、騰落率をかけるのは14回（開始月から14年後まで）となる。
 					</p>
-					<ul>
-						<li>1回目、1987年12月から2001年12月。</li>
-						<li>2回目、1988年1月から2002年1月。</li>
-						<li>3回目、1988年2月から2002年2月。</li>
-						<li>...</li>
-						<li>263回目、2009年10月から2023年10月。</li>
-						<li>264回目、2009年11月から2023年11月。</li>
-					</ul>
-					<p>
-						計算式にすると、
-						<code>(データ月数) - 12 * (取り崩し年数 - 1) </code>
-						となる。
-					</p>
+					<TrialExample chart={chart} meta={simulationMeta[0]} />
 				</CardContent>
 			</Card>
 		</section>
+	);
+}
+
+type TrialExampleProps = {
+	chart: Chart;
+	meta: SimulationMeta | undefined;
+};
+
+// 試行回数の説明。実際のデータから例を作る
+function TrialExample({ chart, meta }: TrialExampleProps) {
+	if (!meta) return null;
+	const { payoutPeriod, numOfSimulation } = meta;
+	const month = (index: number) =>
+		formatDate(new Date(chart[index].date), "YYYY年M月");
+	const trial = (n: number) => {
+		const start = n - 1;
+		const end = start + 12 * (payoutPeriod - 1);
+		return `${n}回目、${month(start)}から${month(end)}。`;
+	};
+	const trials =
+		numOfSimulation > 5
+			? [1, 2, 3, null, numOfSimulation - 1, numOfSimulation]
+			: Array.from({ length: numOfSimulation }, (_, i) => i + 1);
+
+	return (
+		<>
+			<h3 class={sectionHeading3}>試行回数について</h3>
+			<p>上の操作をデータ数が許す限り、開始月を1か月ずつずらして繰り返す。</p>
+			<p>
+				例えば、{month(0)}から{month(chart.length - 1)}
+				のデータ（{chart.length}か月分）で、{payoutPeriod}
+				年の取り崩し年数でシミュレーションする回数は以下のようになる。
+			</p>
+			<ul>
+				{trials.map((n) => (
+					<li>{n === null ? "..." : trial(n)}</li>
+				))}
+			</ul>
+			<p>
+				計算式にすると、
+				<code>(データ月数) - 12 * (取り崩し年数 - 1)</code>
+				となる（{chart.length} - 12 * {payoutPeriod - 1} = {numOfSimulation}
+				回）。
+			</p>
+		</>
 	);
 }
 
