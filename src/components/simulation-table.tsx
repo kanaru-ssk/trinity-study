@@ -28,7 +28,7 @@ export function SimulationTable({
 						return (
 							<tr>
 								<th class="sticky left-0 w-20 bg-card px-4 py-1 text-center">
-									{meta.payoutPeriod} Year
+									{meta.payoutPeriod}年
 									<br />
 									(n={meta.numOfSimulation})
 								</th>
