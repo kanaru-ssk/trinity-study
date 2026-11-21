@@ -59,3 +59,4 @@ jobs:
   deploy:
     needs: update-chart
     uses: ./.github/workflows/deploy.yaml
+    secrets: inherit # 再利用ワークフローへ CLOUDFLARE_API_TOKEN 等を渡す
