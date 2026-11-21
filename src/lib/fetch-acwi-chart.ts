@@ -1,10 +1,15 @@
 import z from "zod";
 import type { ChartData } from "../types/chart.ts";
+import type { Result } from "../types/result.ts";
+import { fetchJson } from "./fetch-json.ts";
+
+type AcwiChart = Omit<ChartData, "priceJpy" | "jpyPerUsd">[];
 
 // MSCI API から最新のACWIチャートデータをフェッチ
+// 新しいデータがない場合は空配列を返す。取得や解析に失敗した場合はエラーを返す
 export const fetchAcwiChart = async (
 	lastDataDate: Date,
-): Promise<Omit<ChartData, "priceJpy" | "jpyPerUsd">[] | null> => {
+): Promise<Result<AcwiChart, string>> => {
 	const cloneLastDataDate = new Date(lastDataDate);
 	cloneLastDataDate.setDate(cloneLastDataDate.getDate() + 1);
 	const lastDataDateStr = toNoBreakStr(cloneLastDataDate);
@@ -19,27 +24,25 @@ export const fetchAcwiChart = async (
 	const dataFrequency = "data_frequency=END_OF_MONTH";
 	const indexCodes = "index_codes=892400";
 
-	const res = await fetch(
+	const res = await fetchJson(
 		`${endpoint}?${currencySymbol}&${indexVariant}&${startDate}&${endDate}&${dataFrequency}&${indexCodes}`,
 	);
 	if (!res.ok) {
-		console.error(`${res.status}: ${res.statusText}`);
-		return null;
+		return { ok: false, error: `MSCI API: ${res.error}` };
 	}
 
-	const parsed = msciResponseSchema.safeParse(await res.json());
+	const parsed = msciResponseSchema.safeParse(res.data);
 	if (!parsed.success) {
-		console.error(parsed.error);
-		return null;
+		return { ok: false, error: `MSCI API: ${parsed.error.message}` };
 	}
 
-	return parsed.data.indexes.INDEX_LEVELS.map((level) => {
-		const date = format(level.calc_date);
-		return {
-			date,
+	return {
+		ok: true,
+		data: parsed.data.indexes.INDEX_LEVELS.map((level) => ({
+			date: format(level.calc_date),
 			priceUsd: level.level_eod,
-		};
-	});
+		})),
+	};
 };
 
 const msciResponseSchema = z.object({
