@@ -47,7 +47,7 @@
 }
 
 :root {
-	/* Notion-style design tokens (.claude/DESIGN.md) */
+	/* Notion-style design tokens */
 	--radius: 12px;
 	--background: #f6f5f4; /* colors.canvas-soft */
 	--foreground: #171717; /* colors.ink */
