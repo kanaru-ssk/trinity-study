@@ -14,6 +14,9 @@ const GET: Handler = (c) => {
 <loc>${BASE_URL}/</loc>
 <lastmod>${lastmod}</lastmod>
 </url>
+<url>
+<loc>${BASE_URL}/privacy</loc>
+</url>
 </urlset>
 `;
 	return c.body(xml, 200, { "Content-Type": "application/xml" });

@@ -63,7 +63,15 @@ export const renderer = jsxRenderer(
 						/>
 					</noscript>
 					{children}
-					<footer class="p-8 text-center text-ink-muted text-xs">
+					<footer class="space-y-2 p-8 text-center text-ink-muted text-xs">
+						<p>
+							<a
+								href="/privacy"
+								class="text-primary underline underline-offset-2 hover:text-primary-active"
+							>
+								プライバシーポリシー・免責事項
+							</a>
+						</p>
 						<p>
 							&copy;
 							<a

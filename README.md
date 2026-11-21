@@ -45,6 +45,7 @@ MSCI ACWI を日本円建てで取崩すシミュレーションを掲載する�
 | ファイル                      | パス           |
 | ----------------------------- | -------------- |
 | `routes/index.tsx`            | `/`            |
+| `routes/privacy/index.tsx`    | `/privacy`     |
 | `routes/sitemap.xml/index.ts` | `/sitemap.xml` |
 
 ## データ
