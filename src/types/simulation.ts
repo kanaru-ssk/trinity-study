@@ -1,4 +1,4 @@
 export type SimulationMeta = {
-  payoutPeriod: number;
-  numOfSimulation: number;
+	payoutPeriod: number;
+	numOfSimulation: number;
 };

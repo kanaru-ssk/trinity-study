@@ -2,29 +2,29 @@ import { type Chart, chartSchema } from "../types/chart.ts";
 import type { Result } from "../types/result.ts";
 
 export function parseCsvToCart(csv: string): Result<Chart, string> {
-  const [headerLine, ...lines] = csv.trim().split("\n");
-  const headers = headerLine.split(",");
+	const [headerLine, ...lines] = csv.trim().split("\n");
+	const headers = headerLine.split(",");
 
-  const rows = lines
-    .map((line) => line.split(","))
-    .map((cols) => {
-      const obj: Record<string, string> = {};
-      headers.forEach((h, i) => {
-        obj[h] = cols[i] ?? "";
-      });
-      return obj;
-    });
+	const rows = lines
+		.map((line) => line.split(","))
+		.map((cols) => {
+			const obj: Record<string, string> = {};
+			headers.forEach((h, i) => {
+				obj[h] = cols[i] ?? "";
+			});
+			return obj;
+		});
 
-  const parsed = chartSchema.safeParse(rows);
-  if (!parsed.success) {
-    return {
-      ok: false,
-      error: parsed.error.message,
-    };
-  }
+	const parsed = chartSchema.safeParse(rows);
+	if (!parsed.success) {
+		return {
+			ok: false,
+			error: parsed.error.message,
+		};
+	}
 
-  return {
-    ok: true,
-    data: parsed.data,
-  };
+	return {
+		ok: true,
+		data: parsed.data,
+	};
 }
