@@ -49,7 +49,9 @@ MSCI ACWI を日本円建てで取崩すシミュレーションを掲載する�
 
 ## データ
 
-チャートデータは `src/data/chart.csv` に保存しています。GitHub Actions（`.github/workflows/update-chart.yaml`）が毎月 `npm run update` で最新データを追記し、デプロイします。
+チャートデータは `src/data/chart.csv` に保存しています。GitHub Actions（`.github/workflows/update-chart.yaml`）が毎月 `npm run update` で最新データを追記し、テストが通れば `main` に直接 push して、その SHA をデプロイします。
+
+`GITHUB_TOKEN` による PR 作成や push では他のワークフローが起動しないため、PR を経由せずにワークフロー内でテストとデプロイを完結させています。`main` にブランチ保護を設定する場合は、GitHub Actions からの push を許可（bypass）してください。
 
 ACWI のチャートデータ : [End of day index data search](https://www.msci.com/end-of-day-data-search)
 
