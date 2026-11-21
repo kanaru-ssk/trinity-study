@@ -21,7 +21,7 @@ if (!parsed.ok) {
 const chart = parsed.data;
 const lastDataDate = chart[chart.length - 1].date;
 
-const newChart = await fetchAcwiChart(new Date(lastDataDate));
+const newChart = await fetchAcwiChart(lastDataDate);
 if (!newChart.ok) {
 	throw new Error(newChart.error);
 }
