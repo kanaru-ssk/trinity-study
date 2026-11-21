@@ -112,6 +112,9 @@ function SimulationSection({
 						のデータを使用してシミュレーションしています。
 						<br />※ 指数は MSCI ACWI {indexLabel}
 						を円換算したものです。信託報酬・税金は考慮していません。
+						<br />※
+						過去データに基づく試算であり、将来の運用成果を保証するものではありません（
+						<a href="/privacy#disclaimer">免責事項</a>）。
 						<br />※ 実際のアルゴリズムは
 						<a
 							href="https://github.com/kanaru-ssk/trinity-study/blob/main/src/lib/make-simulation.ts"
