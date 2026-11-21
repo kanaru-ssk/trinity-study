@@ -29,4 +29,28 @@ describe("makeSimulation", () => {
 		// 15 年: 5% は 75 で成功、7% は 105 で失敗
 		expect(simulationResults[0]).toEqual([1, 0]);
 	});
+
+	it("cpi を指定すると取り崩し額をインフレ調整する", () => {
+		const chart = makeChart(12 * 20, 1);
+		// 毎年 5% の物価上昇
+		const cpi = chart.map((_, i) => 1.05 ** Math.floor(i / 12));
+		// 名目なら 15 年 x 6 = 90 で成功するが、インフレ調整すると 100 を超えて失敗する
+		expect(makeSimulation(chart, [6]).simulationResults[0]).toEqual([1]);
+		expect(makeSimulation(chart, [6], { cpi }).simulationResults[0]).toEqual([
+			0,
+		]);
+	});
+
+	it("物価が横ばいなら名目と同じ結果になる", () => {
+		const chart = makeChart(12 * 20, 1.003);
+		const cpi = chart.map(() => 100);
+		expect(makeSimulation(chart, [4, 8], { cpi })).toEqual(
+			makeSimulation(chart, [4, 8]),
+		);
+	});
+
+	it("cpi の長さが chart と違えばエラーにする", () => {
+		const chart = makeChart(12 * 20, 1);
+		expect(() => makeSimulation(chart, [4], { cpi: [1] })).toThrow();
+	});
 });
