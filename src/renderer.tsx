@@ -32,8 +32,8 @@ export const renderer = jsxRenderer(
 					<meta property="og:image" content={`${BASE_URL}/ogp.png`} />
 					<meta name="google-adsense-account" content={ADSENSE_ACCOUNT} />
 					{noindex && <meta name="robots" content="noindex, nofollow" />}
-					<link rel="icon" href="/favicon.ico" sizes="any" />
 					<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+					<link rel="icon" type="image/x-icon" href="/favicon.ico" />
 					<link rel="preconnect" href="https://fonts.googleapis.com" />
 					<link
 						rel="preconnect"
