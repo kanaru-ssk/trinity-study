@@ -53,6 +53,8 @@ MSCI ACWI を日本円建てで取崩すシミュレーションを掲載する�
 
 ACWI のチャートデータ : [End of day index data search](https://www.msci.com/end-of-day-data-search)
 
+`src/data/index.json` の `indexVariant` は、`chart.csv` の priceUsd がどの種類の指数か（`STRD`: 配当なし / `NETR`: 配当込み Net / `GRTR`: 配当込み Gross）を表します。月次更新では同じ種類の指数を取得します。種類を変える場合は、GitHub Actions の「Rebuild Chart」ワークフロー（`node scripts/rebuild-chart.ts <種類>`）で全期間を取り直し、作成された PR を確認してマージしてください。既存と同じ期間のデータを取得できない場合（配当込み指数の公表開始が遅い場合など）は失敗します。
+
 ドル円為替データ : [Frankfurter API](https://frankfurter.dev/)（欧州中央銀行の参照レート）
 
 ## デプロイ

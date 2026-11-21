@@ -24,7 +24,7 @@ describe("fetchAcwiChart", () => {
 					),
 				),
 		);
-		expect(await fetchAcwiChart("2026-10-30")).toEqual({
+		expect(await fetchAcwiChart("2026-10-30", "STRD")).toEqual({
 			ok: true,
 			data: [{ date: "2026-11-30", priceUsd: 1000.5 }],
 		});
@@ -34,10 +34,15 @@ describe("fetchAcwiChart", () => {
 		const fetch = vi.fn().mockResolvedValue(Response.json(msciResponse([])));
 		vi.stubGlobal("fetch", fetch);
 		// 2026-11-21 は土曜日
-		await fetchAcwiChart("2026-10-31", new Date("2026-11-21T12:00:00Z"));
+		await fetchAcwiChart(
+			"2026-10-31",
+			"NETR",
+			new Date("2026-11-21T12:00:00Z"),
+		);
 		const url = new URL(fetch.mock.calls[0][0]);
 		expect(url.searchParams.get("start_date")).toBe("20261101");
 		expect(url.searchParams.get("end_date")).toBe("20261123");
+		expect(url.searchParams.get("index_variant")).toBe("NETR");
 	});
 
 	it("新しいデータがなければ空配列を返す", async () => {
@@ -45,7 +50,7 @@ describe("fetchAcwiChart", () => {
 			"fetch",
 			vi.fn().mockResolvedValue(Response.json(msciResponse([]))),
 		);
-		expect(await fetchAcwiChart("2026-10-30")).toEqual({
+		expect(await fetchAcwiChart("2026-10-30", "STRD")).toEqual({
 			ok: true,
 			data: [],
 		});
@@ -56,7 +61,7 @@ describe("fetchAcwiChart", () => {
 			"fetch",
 			vi.fn().mockResolvedValue(Response.json({ unexpected: true })),
 		);
-		const result = await fetchAcwiChart("2026-10-30");
+		const result = await fetchAcwiChart("2026-10-30", "STRD");
 		expect(result.ok).toBe(false);
 	});
 });

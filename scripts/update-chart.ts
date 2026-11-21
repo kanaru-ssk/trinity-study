@@ -6,6 +6,7 @@ import {
 	isPlausibleRate,
 } from "../src/lib/fetch-exchange-rate.ts";
 import { isStale } from "../src/lib/freshness.ts";
+import { indexMetaSchema } from "../src/lib/index-variant.ts";
 import { parseCsvToCart } from "../src/lib/parse-csv-to-cart.ts";
 import { type Chart, chartSchema } from "../src/types/chart.ts";
 
@@ -22,7 +23,17 @@ if (!parsed.ok) {
 const chart = parsed.data;
 const lastDataDate = chart[chart.length - 1].date;
 
-const newChart = await fetchAcwiChart(lastDataDate);
+// 既存データと同じ種類の指数を取得する
+const { indexVariant } = indexMetaSchema.parse(
+	JSON.parse(
+		await fs.readFile(
+			path.join(process.cwd(), "src", "data", "index.json"),
+			"utf8",
+		),
+	),
+);
+
+const newChart = await fetchAcwiChart(lastDataDate, indexVariant);
 if (!newChart.ok) {
 	throw new Error(newChart.error);
 }
