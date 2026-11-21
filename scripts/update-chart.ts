@@ -3,7 +3,7 @@ import path from "node:path";
 import { fetchAcwiChart } from "../src/lib/fetch-acwi-chart.ts";
 import { fetchExchangeRate } from "../src/lib/fetch-exchange-rate.ts";
 import { parseCsvToCart } from "../src/lib/parse-csv-to-cart.ts";
-import type { Chart } from "../src/types/chart.ts";
+import { type Chart, chartSchema } from "../src/types/chart.ts";
 
 const apiKey = process.env.EXCHANGE_RATE_API_KEY;
 if (!apiKey) throw new Error("EXCHANGE_RATE_API_KEY is not set");
@@ -29,7 +29,10 @@ if (!apiKey) throw new Error("EXCHANGE_RATE_API_KEY is not set");
 	const newChartWithJpy: Chart = [];
 	for (const data of newChart) {
 		const jpyPerUsd = await fetchExchangeRate(data.date, apiKey);
-		if (!jpyPerUsd) continue;
+		// 1 か月でも欠けると「12 行 = 1 年」の前提が崩れるため、何も書き込まずに失敗させる
+		if (!jpyPerUsd) {
+			throw new Error(`failed to fetch exchange rate: ${data.date}`);
+		}
 
 		newChartWithJpy.push({
 			date: data.date,
@@ -43,6 +46,12 @@ if (!apiKey) throw new Error("EXCHANGE_RATE_API_KEY is not set");
 	if (newChartWithJpy.length === 0) {
 		console.log("there is no new chart data with jpy");
 		return;
+	}
+
+	// 追記後のデータ全体が月次で連続しているか検証してから書き込む
+	const validated = chartSchema.safeParse([...chart, ...newChartWithJpy]);
+	if (!validated.success) {
+		throw new Error(validated.error.message);
 	}
 
 	const rows = newChartWithJpy
