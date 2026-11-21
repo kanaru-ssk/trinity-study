@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { compareRoutes, conflictKey, parseRoute } from "./route";
+import { compareRoutes, conflictKey, parseRoute } from "./route.ts";
 
 describe("parseRoute", () => {
 	it.each([

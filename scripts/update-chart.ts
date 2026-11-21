@@ -7,7 +7,7 @@ import {
 } from "../src/lib/fetch-exchange-rate.ts";
 import { isStale } from "../src/lib/freshness.ts";
 import { indexMetaSchema } from "../src/lib/index-variant.ts";
-import { parseCsvToCart } from "../src/lib/parse-csv-to-cart.ts";
+import { parseCsvToChart } from "../src/lib/parse-csv-to-chart.ts";
 import { type Chart, chartSchema } from "../src/types/chart.ts";
 
 // 失敗時は例外で非 0 終了させ、ワークフローを失敗として検知できるようにする
@@ -16,7 +16,7 @@ import { type Chart, chartSchema } from "../src/types/chart.ts";
 const filePath = path.join(process.cwd(), "src", "data", "chart.csv");
 const text = await fs.readFile(filePath, "utf8");
 
-const parsed = parseCsvToCart(text);
+const parsed = parseCsvToChart(text);
 if (!parsed.ok) {
 	throw new Error(parsed.error);
 }

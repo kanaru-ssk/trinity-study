@@ -1,15 +1,13 @@
-import type { SimulationMeta } from "../types/simulation";
+import type { SimulationRow } from "../types/simulation.ts";
 
 type SimulationTableProps = {
 	withdrawalRates: number[];
-	simulationMeta: SimulationMeta[];
-	simulationResults: number[][];
+	rows: SimulationRow[];
 };
 
 export function SimulationTable({
 	withdrawalRates,
-	simulationMeta,
-	simulationResults,
+	rows,
 }: SimulationTableProps) {
 	return (
 		<div class="overflow-x-auto">
@@ -23,26 +21,23 @@ export function SimulationTable({
 					</tr>
 				</thead>
 				<tbody>
-					{simulationResults.map((resultsRow, i) => {
-						const meta = simulationMeta[i];
-						return (
-							<tr>
-								<th class="sticky left-0 w-20 bg-card px-4 py-1 text-center">
-									{meta.payoutPeriod}年
-									<br />
-									(n={meta.numOfSimulation})
-								</th>
-								{resultsRow.map((result) => (
-									<td
-										class="px-4 py-3 text-center"
-										style={{ backgroundColor: getCellColor(result) }}
-									>
-										{Math.floor(100 * result)}
-									</td>
-								))}
-							</tr>
-						);
-					})}
+					{rows.map(({ payoutPeriod, numOfSimulation, successRates }) => (
+						<tr>
+							<th class="sticky left-0 w-20 bg-card px-4 py-1 text-center">
+								{payoutPeriod}年
+								<br />
+								(n={numOfSimulation})
+							</th>
+							{successRates.map((result) => (
+								<td
+									class="px-4 py-3 text-center"
+									style={{ backgroundColor: getCellColor(result) }}
+								>
+									{Math.floor(100 * result)}
+								</td>
+							))}
+						</tr>
+					))}
 				</tbody>
 			</table>
 		</div>

@@ -1,6 +1,6 @@
 import { jsxRenderer } from "hono/jsx-renderer";
 import { Link, ViteClient } from "vite-ssr-components/hono";
-import { ADSENSE_ACCOUNT, BASE_URL, GTM_ID } from "./constants";
+import { ADSENSE_ACCOUNT, BASE_URL, GTM_ID } from "./constants.ts";
 
 export type Meta = {
 	title: string;

@@ -9,7 +9,7 @@ import {
 	indexMetaSchema,
 	indexVariantLabels,
 } from "../src/lib/index-variant.ts";
-import { parseCsvToCart } from "../src/lib/parse-csv-to-cart.ts";
+import { parseCsvToChart } from "../src/lib/parse-csv-to-chart.ts";
 import { rebuildChart, toCsv } from "../src/lib/rebuild-chart.ts";
 
 const variant = indexMetaSchema.shape.indexVariant.parse(process.argv[2]);
@@ -17,7 +17,7 @@ const variant = indexMetaSchema.shape.indexVariant.parse(process.argv[2]);
 const csvPath = path.join(process.cwd(), "src", "data", "chart.csv");
 const metaPath = path.join(process.cwd(), "src", "data", "index.json");
 
-const parsed = parseCsvToCart(await fs.readFile(csvPath, "utf8"));
+const parsed = parseCsvToChart(await fs.readFile(csvPath, "utf8"));
 if (!parsed.ok) throw new Error(parsed.error);
 const chart = parsed.data;
 

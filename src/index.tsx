@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { trimTrailingSlash } from "hono/trailing-slash";
-import { type RouteModule, registerRoutes } from "./lib/router";
-import { renderer } from "./renderer";
+import { type RouteModule, registerRoutes } from "./lib/router/index.ts";
+import { renderer } from "./renderer.tsx";
 
 const app = new Hono();
 

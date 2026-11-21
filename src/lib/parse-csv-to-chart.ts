@@ -1,7 +1,7 @@
 import { type Chart, chartSchema } from "../types/chart.ts";
 import type { Result } from "../types/result.ts";
 
-export function parseCsvToCart(csv: string): Result<Chart, string> {
+export function parseCsvToChart(csv: string): Result<Chart, string> {
 	const [headerLine, ...lines] = csv.trim().split("\n");
 	const headers = headerLine.split(",");
 

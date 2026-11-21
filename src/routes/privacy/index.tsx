@@ -1,5 +1,5 @@
 import type { Handler } from "hono";
-import { Card, CardContent } from "../../components/ui/card";
+import { Card, CardContent } from "../../components/ui/card.tsx";
 
 const ssg = true;
 

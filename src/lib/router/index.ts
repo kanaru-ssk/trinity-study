@@ -5,7 +5,7 @@ import {
 	conflictKey,
 	type ParsedRoute,
 	parseRoute,
-} from "./route";
+} from "./route.ts";
 
 const methods = ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"] as const;
 

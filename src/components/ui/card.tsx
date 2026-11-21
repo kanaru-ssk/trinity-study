@@ -1,5 +1,5 @@
 import type { PropsWithChildren } from "hono/jsx";
-import { cn } from "../../lib/utils";
+import { cn } from "../../lib/utils.ts";
 
 type Props = PropsWithChildren<{ class?: string }>;
 

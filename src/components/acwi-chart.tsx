@@ -1,6 +1,6 @@
-import { niceTicks } from "../lib/nice-ticks";
-import { cn } from "../lib/utils";
-import type { Chart } from "../types/chart";
+import { niceTicks } from "../lib/nice-ticks.ts";
+import { cn } from "../lib/utils.ts";
+import type { Chart } from "../types/chart.ts";
 
 /** クライアントのツールチップに渡すデータ。[日付, ドル建て, 円建て, JPY/USD] */
 export type AcwiChartPoint = [string, number, number, number];
