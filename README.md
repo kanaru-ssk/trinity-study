@@ -64,3 +64,10 @@ ACWI のチャートデータ : [End of day index data search](https://www.msci.
 ## デプロイ
 
 `main` への push で `.github/workflows/deploy.yaml` が Cloudflare Workers にデプロイします。リポジトリの Secrets に `CLOUDFLARE_API_TOKEN` と `CLOUDFLARE_ACCOUNT_ID` を設定してください。
+
+## ブランチ保護
+
+Dependabot の PR は `.github/workflows/dependabot-auto-merge.yaml` が `gh pr merge --auto` で自動マージします（patch と devDependencies の minor のみ）。`--auto` は必須チェックがあるときだけテスト通過を待つため、`main` には次のブランチ保護（Ruleset）を設定してください。
+
+- 必須ステータスチェック: `test`（`.github/workflows/test.yaml`）
+- Bypass: GitHub Actions（`update-chart.yaml` が `main` に直接 push するため）
