@@ -1,7 +1,7 @@
 /// <reference lib="dom" />
 /// <reference lib="dom.iterable" />
 // src/components/acwi-chart.tsx のホバー時にツールチップを表示する
-import type { AcwiChartData } from "../components/acwi-chart";
+import type { AcwiChartData } from "../components/acwi-chart.tsx";
 
 const formatNumber = (value: number) =>
 	value.toLocaleString("ja-JP", { maximumFractionDigits: 2 });

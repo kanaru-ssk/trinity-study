@@ -7,5 +7,12 @@
 		"parser": {
 			"tailwindDirectives": true
 		}
+	},
+	"linter": {
+		"rules": {
+			"correctness": {
+				"useImportExtensions": "error"
+			}
+		}
 	}
 }

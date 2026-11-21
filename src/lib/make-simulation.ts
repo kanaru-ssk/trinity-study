@@ -1,4 +1,5 @@
 import type { Chart } from "../types/chart.ts";
+import type { SimulationRow } from "../types/simulation.ts";
 
 type Options = {
 	/**
@@ -9,13 +10,12 @@ type Options = {
 };
 
 // 取崩しシミュレーションデータを作成
-// simulationMeta : 取崩し期間とシミュレーション回数の配列
-// simulationResults : 取崩し期間と取崩し率の二元配列
+// 取り崩し期間ごとに、試行回数と取り崩し率ごとの成功率を返す
 export function makeSimulation(
 	chart: Chart,
 	withdrawalRates: number[],
 	{ cpi }: Options = {},
-) {
+): SimulationRow[] {
 	if (cpi && cpi.length !== chart.length) {
 		throw new Error("cpi は chart と同じ長さにしてください");
 	}
@@ -29,19 +29,16 @@ export function makeSimulation(
 		(_, i) => i * 5 + 15,
 	);
 
-	const simulationMeta = payoutPeriods.map((payoutPeriod) => ({
-		payoutPeriod,
-		numOfSimulation: chart.length - 12 * (payoutPeriod - 1),
-	}));
-
-	const simulationResults = simulationMeta.map(
-		({ payoutPeriod, numOfSimulation }) =>
-			withdrawalRates.map((withdrawalRate) =>
+	return payoutPeriods.map((payoutPeriod) => {
+		const numOfSimulation = chart.length - 12 * (payoutPeriod - 1);
+		return {
+			payoutPeriod,
+			numOfSimulation,
+			successRates: withdrawalRates.map((withdrawalRate) =>
 				simulate(chart, payoutPeriod, numOfSimulation, withdrawalRate, cpi),
 			),
-	);
-
-	return { simulationMeta, simulationResults };
+		};
+	});
 }
 
 // 取崩しシミュレーション
@@ -64,10 +61,10 @@ const simulate = (
 		for (let pi = 1; pi < payoutPeriod; pi++) {
 			const prePrice = chart[i + 12 * (pi - 1)].priceJpy; // 1年前の基準価格
 			const price = chart[i + 12 * pi].priceJpy; // 当月の基準価格
-			const PercentageChange = price / prePrice; // 騰落率
+			const growthRatio = price / prePrice; // 1年間の価格の倍率（1 + 騰落率）
 
-			// 資産残高に騰落率を掛ける
-			amountRemaining *= PercentageChange;
+			// 資産残高に価格の倍率を掛ける
+			amountRemaining *= growthRatio;
 
 			// 資産残高から取崩し額を引く（インフレ調整する場合は開始月からの物価上昇率を掛ける）
 			const inflation = cpi ? cpi[i + 12 * pi] / cpi[i] : 1;

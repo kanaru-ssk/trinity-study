@@ -1,4 +1,4 @@
-import z from "zod";
+import { z } from "zod";
 import type { ChartData } from "../types/chart.ts";
 import type { Result } from "../types/result.ts";
 import {

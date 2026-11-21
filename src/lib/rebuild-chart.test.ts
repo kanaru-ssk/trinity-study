@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Chart } from "../types/chart.ts";
-import { parseCsvToCart } from "./parse-csv-to-cart.ts";
+import { parseCsvToChart } from "./parse-csv-to-chart.ts";
 import { rebuildChart, toCsv } from "./rebuild-chart.ts";
 
 const chart: Chart = [
@@ -50,7 +50,7 @@ describe("rebuildChart", () => {
 });
 
 describe("toCsv", () => {
-	it("parseCsvToCart で読み戻せる", () => {
-		expect(parseCsvToCart(toCsv(chart))).toEqual({ ok: true, data: chart });
+	it("parseCsvToChart で読み戻せる", () => {
+		expect(parseCsvToChart(toCsv(chart))).toEqual({ ok: true, data: chart });
 	});
 });

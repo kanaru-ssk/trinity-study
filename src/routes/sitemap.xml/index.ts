@@ -1,6 +1,6 @@
 import type { Handler } from "hono";
-import { BASE_URL } from "../../constants";
-import { loadChart } from "../../lib/load-chart";
+import { BASE_URL } from "../../constants.ts";
+import { loadChart } from "../../lib/load-chart.ts";
 
 const ssg = true;
 
