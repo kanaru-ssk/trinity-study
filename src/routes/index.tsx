@@ -1,4 +1,6 @@
 import type { Handler } from "hono";
+import { Script } from "vite-ssr-components/hono";
+import { AcwiChart } from "../components/acwi-chart";
 import { SimulationTable } from "../components/simulation-table";
 import {
 	Card,
@@ -11,6 +13,7 @@ import csv from "../data/chart.csv?raw";
 import { formatDate } from "../lib/date";
 import { makeSimulation } from "../lib/make-simulation";
 import { parseCsvToCart } from "../lib/parse-csv-to-cart";
+import type { Chart } from "../types/chart";
 import type { SimulationMeta } from "../types/simulation";
 
 const ssg = true;
@@ -52,6 +55,11 @@ const GET: Handler = (c) => {
 				withdrawalRates={withdrawalRates}
 				simulationMeta={simulationMeta}
 				simulationResults={simulationResults}
+				firstDataDate={firstDataDate}
+				lastDataDate={lastDataDate}
+			/>
+			<ChartSection
+				chart={chart}
 				firstDataDate={firstDataDate}
 				lastDataDate={lastDataDate}
 			/>
@@ -115,6 +123,66 @@ function SimulationSection({
 				</CardContent>
 			</Card>
 		</section>
+	);
+}
+
+type ChartSectionProps = {
+	chart: Chart;
+	firstDataDate: string;
+	lastDataDate: string;
+};
+
+function ChartSection({
+	chart,
+	firstDataDate,
+	lastDataDate,
+}: ChartSectionProps) {
+	return (
+		<section>
+			<Card>
+				<CardHeader>
+					<CardTitle>
+						MSCI ACWIの全期間チャート <TrendingUpIcon />
+					</CardTitle>
+					<CardDescription>
+						※ {firstDataDate} ~ {lastDataDate}
+						<br />※ データは
+						<a
+							href="https://www-cdn.msci.com/web/msci/index-tools/end-of-day-index-data-search"
+							target="_blank"
+							rel="noreferrer"
+						>
+							MSCIの公式ページ
+						</a>
+						から取得しています。
+					</CardDescription>
+				</CardHeader>
+				<CardContent>
+					<AcwiChart chart={chart} />
+					<Script src="/src/client/acwi-chart.ts" />
+				</CardContent>
+			</Card>
+		</section>
+	);
+}
+
+// lucide の trending-up アイコン
+function TrendingUpIcon() {
+	return (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="2"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+			class="ml-2 inline-block size-4 align-[-0.05em]"
+			aria-hidden="true"
+		>
+			<path d="M16 7h6v6" />
+			<path d="m22 7-8.5 8.5-5-5L2 17" />
+		</svg>
 	);
 }
 
